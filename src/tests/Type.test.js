@@ -1,0 +1,206 @@
+import Type from './../Type';
+
+describe('Type', () => {
+
+	describe('bool', () => {
+		const bool = Type.bool();
+		it ('compares a bool successfully', () => {
+			expect(bool.compare(true)).toEqual(true);
+		});
+
+		it ('compares a string unsuccessfully', () => {
+			expect(bool.compare('test')).toEqual(false);
+		});
+
+		it ('validates a bool successfully', () => {
+			expect(bool.validate(false)).toEqual([]);
+		});
+
+		it ('validates a string unsuccessfully', () => {
+			expect(bool.validate('test')).toEqual(['test']);
+		});
+	});
+
+	describe('number', () => {
+		const number = Type.number();
+		it ('compares a number successfully', () => {
+			expect(number.compare(12)).toEqual(true);
+		});
+
+		it ('compares a string unsuccessfully', () => {
+			expect(number.compare('test')).toEqual(false);
+		});
+
+		it ('validates a number successfully', () => {
+			expect(number.validate(12)).toEqual([]);
+		});
+
+		it ('validates a string unsuccessfully', () => {
+			expect(number.validate('test')).toEqual(['test']);
+		});
+	});
+
+	describe('string', () => {
+		const string = Type.string();
+		it ('compares a string successfully', () => {
+			expect(string.compare('test')).toEqual(true);
+		});
+
+		it ('compares a number unsuccessfully', () => {
+			expect(string.compare(12)).toEqual(false);
+		});
+
+		it ('validates a string successfully', () => {
+			expect(string.validate('test')).toEqual([]);
+		});
+
+		it ('validates a number unsuccessfully', () => {
+			expect(string.validate(12)).toEqual([12]);
+		});
+	});
+
+	describe('object', () => {
+		const object = Type.object();
+		it ('compares an object successfully', () => {
+			expect(object.compare({ dog: 'Toby' })).toEqual(true);
+		});
+
+		it ('compares a string unsuccessfully', () => {
+			expect(object.compare('test')).toEqual(false);
+		});
+
+		it ('validates an object successfully', () => {
+			expect(object.validate({ dog: 'Toby' })).toEqual([]);
+		});
+
+		it ('validates an array unsuccessfully', () => {
+			expect(object.validate([ 'test' ])).toEqual([['test']]);
+		});
+	});
+
+	describe('array', () => {
+		const array = Type.array();
+		it ('compares an array successfully', () => {
+			expect(array.compare(['test1', 'test2'])).toEqual(true);
+		});
+
+		it ('compares a string unsuccessfully', () => {
+			expect(array.compare('test')).toEqual(false);
+		});
+
+		it ('validates an array successfully', () => {
+			expect(array.validate(['test'])).toEqual([]);
+		});
+
+		it ('validates an object unsuccessfully', () => {
+			expect(array.validate({ dog: 'Toby' })).toEqual([ { dog: 'Toby' } ]);
+		});
+	});
+
+	describe('datetime', () => {
+		const datetime = Type.datetime();
+		const testdate = new Date();
+		it ('compares a datetime successfully', () => {
+			expect(datetime.compare(testdate)).toEqual(true);
+		});
+
+		it ('compares a string unsuccessfully', () => {
+			expect(datetime.compare('test')).toEqual(false);
+		});
+
+		it ('validates a datetime successfully', () => {
+			expect(datetime.validate(testdate)).toEqual([]);
+		});
+
+		it ('validates an object unsuccessfully', () => {
+			expect(datetime.validate({ dog: 'Toby' })).toEqual([ { dog: 'Toby' } ]);
+		});
+	});
+
+	describe('null', () => {
+		const nullType = Type.null();
+		it ('compares a null value successfully', () => {
+			expect(nullType.compare(null)).toEqual(true);
+		});
+
+		it ('compares a string unsuccessfully', () => {
+			expect(nullType.compare('test')).toEqual(false);
+		});
+
+		it ('validates a null value successfully', () => {
+			expect(nullType.validate(null)).toEqual([]);
+		});
+
+		it ('validates an object unsuccessfully', () => {
+			expect(nullType.validate({ dog: 'Toby' })).toEqual([ { dog: 'Toby' } ]);
+		});
+	});
+
+	describe('undefined', () => {
+		const undefinedType = Type.undefined();
+		it ('compares an undefined value successfully', () => {
+			expect(undefinedType.compare(undefined)).toEqual(true);
+		});
+
+		it ('compares a string unsuccessfully', () => {
+			expect(undefinedType.compare('test')).toEqual(false);
+		});
+
+		it ('validates an undefined value successfully', () => {
+			expect(undefinedType.validate(undefined)).toEqual([]);
+		});
+
+		it ('validates an object unsuccessfully', () => {
+			expect(undefinedType.validate({ dog: 'Toby' })).toEqual([ { dog: 'Toby' } ]);
+		});
+	});
+
+	describe('value', () => {
+		const values = Type.value(1, 2, 3, 'dog');
+		it ('compares an included number value successfully', () => {
+			expect(values.compare(1)).toEqual(true);
+		});
+
+		it ('compares an included string value successfully', () => {
+			expect(values.compare('dog')).toEqual(true);
+		});
+
+		it ('compares an unincluded value unsuccessfully', () => {
+			expect(values.compare(12)).toEqual(false);
+		});
+
+		it ('validates an included value successfully', () => {
+			expect(values.validate('dog')).toEqual([]);
+		});
+
+		it ('validates an unincluded value unsuccessfully', () => {
+			expect(values.validate(12)).toEqual([12]);
+		});
+	});
+
+	describe('custom', () => {
+		const goodEmail = 'test@test.com';
+		const badEmail = 'test@fail'
+		const emailType = Type.custom((val) => {
+			// Courtesy of regexr.com/2rhq7
+			return /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/.test(val);
+		});
+
+		it ('compares a matching value successfully', () => {
+			expect(emailType.compare(goodEmail)).toEqual(true);
+		});
+
+		it ('compares a non-matching value unsuccessfully', () => {
+			expect(emailType.compare(badEmail)).toEqual(false);
+		});
+
+		it ('validates a matching value successfully', () => {
+			expect(emailType.validate(goodEmail)).toEqual([]);
+		});
+
+		it ('validates an non-matching value unsuccessfully', () => {
+			expect(emailType.validate(badEmail)).toEqual([badEmail]);
+		});
+	});
+
+})

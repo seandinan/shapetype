@@ -1,0 +1,10 @@
+export const BOOL      = 'BOOL';
+export const NUMBER    = 'NUMBER';
+export const STRING    = 'STRING';
+export const OBJECT    = 'OBJECT';
+export const ARRAY     = 'ARRAY';
+export const DATETIME  = 'ARRAY';
+export const NULL      = 'NULL';
+export const UNDEFINED = 'UNDEFINED';
+export const CUSTOM    = 'CUSTOM';
+export const VALUE     = 'VALUE';

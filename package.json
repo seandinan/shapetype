@@ -1,0 +1,48 @@
+{
+  "name": "shapetype",
+  "version": "1.0.0",
+  "description": "Define shapes and types and use them for data/structure validation",
+  "main": "index.js",
+  "scripts": {
+    "build": "babel src --out-dir dist --copy-files --ignore \"src/**/*.test.js\"",
+    "test": "jest",
+    "test:watch": "npm test -- --watch"
+  },
+  "keywords": [ "type", "typing", "testing", "validation", "type checking" ],
+  "author": "Sean Dinan <seancdinan@gmail.com> (seandinan.com)",
+  "license": "MIT",
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run test"
+    }
+  },
+  "jest": {
+    "moduleFileExtensions": [ "js", "json" ],
+    "transform": { "^.+\\.js$": "babel-jest" },
+    "modulePathIgnorePatterns": [
+      "<rootDir>/dist/"
+    ]
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@babel/cli": "^7.0.0",
+    "@babel/core": "^7.0.0-0",
+    "@babel/node": "^7.0.0",
+    "@babel/plugin-proposal-class-properties": "^7.1.0",
+    "@babel/polyfill": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "@babel/register": "^7.0.0",
+    "babel-core": "7.0.0-bridge.0",
+    "babel-jest": "^23.6.0",
+    "babel-loader": "^8.0.0",
+    "husky": "^1.1.2",
+    "jest": "^23.6.0",
+    "webpack": "2.4.1",
+    "webpack-cli": "^3.0.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/seancdinan/shapetype.git"
+  },
+  "homepage": "https://github.com/seancdinan/shapetype#readme"
+}
