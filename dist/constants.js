@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.CUSTOM = exports.UNDEFINED = exports.NULL = exports.DATETIME = exports.ARRAY = exports.OBJECT = exports.STRING = exports.NUMBER = exports.BOOL = void 0;
+exports.VALUE = exports.CUSTOM = exports.UNDEFINED = exports.NULL = exports.DATETIME = exports.ARRAY = exports.OBJECT = exports.STRING = exports.NUMBER = exports.BOOL = void 0;
 var BOOL = 'BOOL';
 exports.BOOL = BOOL;
 var NUMBER = 'NUMBER';
@@ -22,3 +22,5 @@ var UNDEFINED = 'UNDEFINED';
 exports.UNDEFINED = UNDEFINED;
 var CUSTOM = 'CUSTOM';
 exports.CUSTOM = CUSTOM;
+var VALUE = 'VALUE';
+exports.VALUE = VALUE;

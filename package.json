@@ -4,7 +4,9 @@
   "description": "Define shapes and types and use them for data/structure validation",
   "main": "index.js",
   "scripts": {
-    "build": "babel src --out-dir dist --copy-files --ignore \"src/**/*.test.js\"",
+    "clean:dist": "rm -rf dist",
+    "build:src": "babel src --out-dir dist --copy-files --ignore \"src/**/*.test.js\"",
+    "build": "npm run test && npm run clean:dist && npm run build:src",
     "test": "jest",
     "test:watch": "npm test -- --watch"
   },

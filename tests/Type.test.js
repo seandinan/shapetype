@@ -1,6 +1,14 @@
-import Type from './../Type';
+import Type from '../src/Type';
 
 describe('Type', () => {
+
+	it ('is able to chain "or" values', () => {
+		const type = Type.number().or(Type.string()).or(Type.null());
+		const compareNumber = type.compare(4);
+		const compareString = type.compare('dog');
+		const compareNull   = type.compare(null);
+		expect(compareNumber && compareString && compareNull).toEqual(true);
+	});
 
 	describe('bool', () => {
 		const bool = Type.bool();
