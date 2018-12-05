@@ -21,11 +21,11 @@ describe('Type', () => {
 		});
 
 		it ('validates a bool successfully', () => {
-			expect(bool.validate(false)).toEqual([]);
+			expect(bool.validate(false)).toEqual({ invalidTypeFields: [] });
 		});
 
 		it ('validates a string unsuccessfully', () => {
-			expect(bool.validate('test')).toEqual(['test']);
+			expect(bool.validate('test')).toEqual({ invalidTypeFields: [ 'test' ] });
 		});
 	});
 
@@ -40,11 +40,11 @@ describe('Type', () => {
 		});
 
 		it ('validates a number successfully', () => {
-			expect(number.validate(12)).toEqual([]);
+			expect(number.validate(12)).toEqual({ invalidTypeFields: [] });
 		});
 
 		it ('validates a string unsuccessfully', () => {
-			expect(number.validate('test')).toEqual(['test']);
+			expect(number.validate('test')).toEqual({ invalidTypeFields: [ 'test' ] });
 		});
 	});
 
@@ -59,11 +59,11 @@ describe('Type', () => {
 		});
 
 		it ('validates a string successfully', () => {
-			expect(string.validate('test')).toEqual([]);
+			expect(string.validate('test')).toEqual({ invalidTypeFields: [] });
 		});
 
 		it ('validates a number unsuccessfully', () => {
-			expect(string.validate(12)).toEqual([12]);
+			expect(string.validate(12)).toEqual({ invalidTypeFields: [ 12 ] });
 		});
 	});
 
@@ -78,11 +78,11 @@ describe('Type', () => {
 		});
 
 		it ('validates an object successfully', () => {
-			expect(object.validate({ dog: 'Toby' })).toEqual([]);
+			expect(object.validate({ dog: 'Toby' })).toEqual({ invalidTypeFields: [] });
 		});
 
 		it ('validates an array unsuccessfully', () => {
-			expect(object.validate([ 'test' ])).toEqual([['test']]);
+			expect(object.validate([ 'test' ])).toEqual({ invalidTypeFields: [ [ 'test' ] ] });
 		});
 	});
 
@@ -97,11 +97,12 @@ describe('Type', () => {
 		});
 
 		it ('validates an array successfully', () => {
-			expect(array.validate(['test'])).toEqual([]);
+			expect(array.validate(['test'])).toEqual({ invalidTypeFields: [] });
 		});
 
 		it ('validates an object unsuccessfully', () => {
-			expect(array.validate({ dog: 'Toby' })).toEqual([ { dog: 'Toby' } ]);
+			expect(array.validate({ dog: 'Toby' }))
+				.toEqual({ invalidTypeFields: [ { dog: 'Toby' } ] });
 		});
 	});
 
@@ -117,11 +118,12 @@ describe('Type', () => {
 		});
 
 		it ('validates a datetime successfully', () => {
-			expect(datetime.validate(testdate)).toEqual([]);
+			expect(datetime.validate(testdate)).toEqual({ invalidTypeFields: [] });
 		});
 
 		it ('validates an object unsuccessfully', () => {
-			expect(datetime.validate({ dog: 'Toby' })).toEqual([ { dog: 'Toby' } ]);
+			expect(datetime.validate({ dog: 'Toby' }))
+				.toEqual({ invalidTypeFields: [ { dog: 'Toby' } ] });
 		});
 	});
 
@@ -136,11 +138,12 @@ describe('Type', () => {
 		});
 
 		it ('validates a null value successfully', () => {
-			expect(nullType.validate(null)).toEqual([]);
+			expect(nullType.validate(null)).toEqual({ invalidTypeFields: [] });
 		});
 
 		it ('validates an object unsuccessfully', () => {
-			expect(nullType.validate({ dog: 'Toby' })).toEqual([ { dog: 'Toby' } ]);
+			expect(nullType.validate({ dog: 'Toby' }))
+				.toEqual({ invalidTypeFields: [ { dog: 'Toby' } ] });
 		});
 	});
 
@@ -155,11 +158,12 @@ describe('Type', () => {
 		});
 
 		it ('validates an undefined value successfully', () => {
-			expect(undefinedType.validate(undefined)).toEqual([]);
+			expect(undefinedType.validate(undefined)).toEqual({ invalidTypeFields: [] });
 		});
 
 		it ('validates an object unsuccessfully', () => {
-			expect(undefinedType.validate({ dog: 'Toby' })).toEqual([ { dog: 'Toby' } ]);
+			expect(undefinedType.validate({ dog: 'Toby' }))
+				.toEqual({ invalidTypeFields: [ { dog: 'Toby' } ] });
 		});
 	});
 
@@ -178,11 +182,11 @@ describe('Type', () => {
 		});
 
 		it ('validates an included value successfully', () => {
-			expect(values.validate('dog')).toEqual([]);
+			expect(values.validate('dog')).toEqual({ invalidTypeFields: [] });
 		});
 
 		it ('validates an unincluded value unsuccessfully', () => {
-			expect(values.validate(12)).toEqual([12]);
+			expect(values.validate(12)).toEqual({ invalidTypeFields: [ 12 ] });
 		});
 	});
 
@@ -203,11 +207,11 @@ describe('Type', () => {
 		});
 
 		it ('validates a matching value successfully', () => {
-			expect(emailType.validate(goodEmail)).toEqual([]);
+			expect(emailType.validate(goodEmail)).toEqual({ invalidTypeFields: [] });
 		});
 
 		it ('validates an non-matching value unsuccessfully', () => {
-			expect(emailType.validate(badEmail)).toEqual([badEmail]);
+			expect(emailType.validate(badEmail)).toEqual({ invalidTypeFields: [ badEmail ] });
 		});
 	});
 

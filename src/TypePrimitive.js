@@ -12,7 +12,9 @@ class TypePrimitive {
 	);
 
 	validate = (val) => {
-		return this.compare(val) ? [] : [ val ];
+		let results = { invalidTypeFields: [] };
+		if (!this.compare(val)) results.invalidTypeFields.push(val);
+		return results;
 	};
 
 	or = (type) => {

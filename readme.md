@@ -29,10 +29,10 @@ Types allow you to define what type of data you expect a value to be.
     - _Example:_ 
         - `EmailType.compare('test@test.com') ~ true`
         - `EmailType.compare('test=test') ~ false`
-- `.validate(val)` returns an empty array if `val` matches the Type or `[ val ]` if it does not.
+- `.validate(val)` returns an validation object assessing whether `val` matches the Type.
     - _Example:_ 
-        - `EmailType.validate('test@test.com') ~ []`
-        - `EmailType.validate('test=test') ~ [ 'test=test' ]` 
+        - `EmailType.validate('test@test.com') ~ { invalidTypeFields: [] }`
+        - `EmailType.validate('test=test') ~ { invalidTypeFields: [ 'test=test' ] }` 
 - `.or()` allows you to chain a list of Types together
     - _Example:_ `const assignedTo = Type.number().or(Type.null())` 
 
@@ -41,6 +41,7 @@ Types allow you to define what type of data you expect a value to be.
 ### `arrayOf(Type|Shape)`
 Indicates that there is an array of the provided value.
 
+When `validate` is called on a value defined by `arrayOf()`, an empty array will be returned if all values pass their tests. An array of validation objects with an additional `index` key will be returned if any of the array's values do not pass their test. 
 
 ---
 
@@ -71,10 +72,16 @@ const Event = defineShape({
     - _Example:_ 
         - `User.compare({ id: 2, name: 'Test', assignedTo: 12 }) ~ true`
         - `User.compare({ id: 2, name: 'Test', assignedTo: 'Joe' }) ~ false`
-- `.validate(obj)` returns an empty array if all keys in `obj` match the patterns defined by the `Shape` or  an array of the values that don't match the pattern if any do not.
+- `.validate(obj)` returns a validation object reflecting the test results of the individual values defined by the shape.
+    - The validation object consists of three arrays:
+        - `missingFields`: fields that are defined in the Shape but missing from the object
+        - `extraFields`: fields that are not defined in the Shape but are included in the object
+        - invalidTypeFields: fields that don't match the Type defined by the Shape
     - _Example:_ 
-        - `User.validate({ id: 2, name: 'Test', assignedTo: 12 }) ~ []`
-        - `User.validate({ id: 2, name: 'Test', assignedTo: 'Joe' }) ~ [ 'assignedTo' ]`
+        - `User.validate({ id: 2, name: 'Test', assignedTo: 12 }) ~ { missingFields: [], extraFields: [], invalidTypeFields: [] }`
+        - `User.validate({ id: 2, name: 'Test', assignedTo: 'Joe' }) ~ { missingFields: [], extraFields: [], invalidTypeFields: [ 'assignedTo' ] }`
+        - `User.validate({ name: 'Test', assignedTo: 12 }) ~ { missingFields: [ 'id ], extraFields: [], invalidTypeFields: [] }`
+       - `User.validate({ id: 2, name: 'Test', assignedTo: 12, isDog: true }) ~ { missingFields: [], extraFields: [ 'isDog' ], invalidTypeFields: [] }`
 
 --- 
 

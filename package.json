@@ -1,6 +1,6 @@
 {
   "name": "shapetype",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Define shapes and types and use them for data/structure validation",
   "main": "index.js",
   "scripts": {
@@ -45,6 +45,9 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/seancdinan/shapetype.git"
+  },
+  "bugs": {
+    "url": "https://github.com/seancdinan/shapetype/issues"
   },
   "homepage": "https://github.com/seancdinan/shapetype#readme"
 }

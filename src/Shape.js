@@ -19,18 +19,32 @@ class Shape {
 	}
 
 	validate = (obj) => {
-		let results = [];
-		const is = (instance) => (key) => this.shape[key] instanceof instance;
-		const isShapeOrType = is(TypePrimitive) || is(Shape) || is(ArrayContainer);
-		Object.keys(obj).forEach(key => {
+		const keys = Object.keys(obj);
+
+		let results = {
+			missingFields    : [],
+			extraFields      : [],
+			invalidTypeFields: [],
+		};
+
+		// Determine if the value has shapetype methods
+		const is = (key) => (instance) => this.shape[key] instanceof instance;
+		const isShapeOrType = (key) => is(key)(TypePrimitive) || is(key)(Shape) || is(key)(ArrayContainer);
+
+		// Check for keys defined by the Shape but missing from the object
+		results.missingFields = Object.keys(this.shape).filter(k => !keys.includes(k));
+
+		// Validate each key in the object
+		keys.forEach(key => {
+			// key isn't defined in the Shape
 			if (!this.shape[key]){
-				results.push(key);
+				results.extraFields.push(key);
 			} else if (isShapeOrType(key) || this.shape[key].constructor.name === 'Object'){
 				if (!this.shape[key].compare(obj[key])){
-					results.push(key);
+					results.invalidTypeFields.push(key);
 				};
 			} else if (obj[key] !== this.shape[key]){
-				results.push(key);
+				results.invalidTypeFields.push(key);
 			}
 		});
 		return results;
