@@ -15,6 +15,7 @@ var ArrayContainer = function ArrayContainer(type) {
   _classCallCheck(this, ArrayContainer);
 
   _defineProperty(this, "compare", function (val) {
+    if (!val.reduce) return false;
     return val.reduce(function (isMatch, b) {
       if (!isMatch) return isMatch;
       return _this.type.compare(b);
@@ -23,13 +24,19 @@ var ArrayContainer = function ArrayContainer(type) {
 
   _defineProperty(this, "validate", function (val) {
     var results = [];
+    if (!val.forEach) throw TypeError('ArrayContainer requires an array for comparison');
     val.forEach(function (entry, i) {
-      var validationResults = _this.type.validate(entry);
+      var _this$type$validate = _this.type.validate(entry),
+          missingFields = _this$type$validate.missingFields,
+          extraFields = _this$type$validate.extraFields,
+          invalidTypeFields = _this$type$validate.invalidTypeFields;
 
-      if (results.length > 0) {
+      if (missingFields.length > 0 || extraFields.length > 0 || invalidTypeFields.length > 0) {
         results.push({
           index: i,
-          data: validationResults
+          missingFields: missingFields,
+          extraFields: extraFields,
+          invalidTypeFields: invalidTypeFields
         });
       }
     });

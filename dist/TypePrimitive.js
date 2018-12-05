@@ -30,7 +30,11 @@ var TypePrimitive = function TypePrimitive(_val, isType) {
   });
 
   _defineProperty(this, "validate", function (val) {
-    return _this.compare(val) ? [] : [val];
+    var results = {
+      invalidTypeFields: []
+    };
+    if (!_this.compare(val)) results.invalidTypeFields.push(val);
+    return results;
   });
 
   _defineProperty(this, "or", function (type) {

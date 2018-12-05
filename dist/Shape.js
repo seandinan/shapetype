@@ -39,26 +39,40 @@ var Shape = function Shape(shape) {
   });
 
   _defineProperty(this, "validate", function (obj) {
-    var results = [];
+    var keys = Object.keys(obj);
+    var results = {
+      missingFields: [],
+      extraFields: [],
+      invalidTypeFields: []
+    }; // Determine if the value has shapetype methods
 
-    var is = function is(instance) {
-      return function (key) {
+    var is = function is(key) {
+      return function (instance) {
         return _this.shape[key] instanceof instance;
       };
     };
 
-    var isShapeOrType = is(_TypePrimitive.default) || is(Shape) || is(_ArrayContainer.default);
-    Object.keys(obj).forEach(function (key) {
+    var isShapeOrType = function isShapeOrType(key) {
+      return is(key)(_TypePrimitive.default) || is(key)(Shape) || is(key)(_ArrayContainer.default);
+    }; // Check for keys defined by the Shape but missing from the object
+
+
+    results.missingFields = Object.keys(_this.shape).filter(function (k) {
+      return !keys.includes(k);
+    }); // Validate each key in the object
+
+    keys.forEach(function (key) {
+      // key isn't defined in the Shape
       if (!_this.shape[key]) {
-        results.push(key);
+        results.extraFields.push(key);
       } else if (isShapeOrType(key) || _this.shape[key].constructor.name === 'Object') {
         if (!_this.shape[key].compare(obj[key])) {
-          results.push(key);
+          results.invalidTypeFields.push(key);
         }
 
         ;
       } else if (obj[key] !== _this.shape[key]) {
-        results.push(key);
+        results.invalidTypeFields.push(key);
       }
     });
     return results;
