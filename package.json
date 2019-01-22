@@ -1,6 +1,6 @@
 {
   "name": "shapetype",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "Define shapes and types and use them for data/structure validation",
   "main": "index.js",
   "scripts": {

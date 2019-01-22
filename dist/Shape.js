@@ -21,10 +21,21 @@ var Shape = function Shape(shape) {
   _classCallCheck(this, Shape);
 
   _defineProperty(this, "compare", function (obj) {
-    return Object.keys(obj).reduce(function (isMatch, key) {
-      if (!isMatch) return isMatch; // Already been shown to be false
+    // All fields are of correct type
+    // Confirm that every obj[key] passes a .compare test with this.shape[key]
+    var objectKeys = Object.keys(obj);
+    var shapeKeys = Object.keys(_this.shape);
+    var isNoExtraFields = objectKeys.reduce(function (isOK, key) {
+      return isOK ? shapeKeys.includes(key) : isOK;
+    }, true);
+    var isAllRequiredFieldsPresent = shapeKeys.reduce(function (isOK, key) {
+      if (!isOK) return isOK; // Confirm that every non-optional field in this.shape is in obj
 
-      if (!_this.shape[key]) return false; // Key missing from reference shape
+      return _this.shape[key].isOptional || objectKeys.includes(key);
+    }, true);
+    if (!isNoExtraFields || !isAllRequiredFieldsPresent) return false;
+    var isAllFieldsCorrectType = objectKeys.reduce(function (isOK, key) {
+      if (!isOK) return isOK;
 
       var is = function is(instance) {
         return _this.shape[key] instanceof instance;
@@ -36,6 +47,7 @@ var Shape = function Shape(shape) {
         return _this.shape[key].compare(obj[key]);
       } else return obj[key] === _this.shape[key];
     }, true);
+    return isAllFieldsCorrectType;
   });
 
   _defineProperty(this, "validate", function (obj) {
@@ -81,7 +93,6 @@ var Shape = function Shape(shape) {
   });
 
   this.shape = shape;
-  this.isOptional = false;
 };
 
 var _default = Shape;
