@@ -25,15 +25,16 @@ Types allow you to define what type of data you expect a value to be.
     - _Example:_ `const EmailType = Type.custom(val => isEmail(val), 'EMAIL');` 
 
 #### Type Methods
-- `.compare(val)` returns `true`/`false` whether `val` matches the Type.
+- `.optional()`: Indicates that a given field isn't required in a shape definition. Tests will still pass if the value is omitted. 
+- `.compare(val)`: returns `true`/`false` whether `val` matches the Type.
     - _Example:_ 
         - `EmailType.compare('test@test.com') ~ true`
         - `EmailType.compare('test=test') ~ false`
-- `.validate(val)` returns an validation object assessing whether `val` matches the Type.
+- `.validate(val)`: returns an validation object assessing whether `val` matches the Type.
     - _Example:_ 
         - `EmailType.validate('test@test.com') ~ { invalidTypeFields: [] }`
         - `EmailType.validate('test=test') ~ { invalidTypeFields: [ 'test=test' ] }` 
-- `.or()` allows you to chain a list of Types together
+- `.or()`: allows you to chain a list of Types together
     - _Example:_ `const assignedTo = Type.number().or(Type.null())` 
 
 --- 

@@ -36,7 +36,13 @@ describe('ShapeType', () => {
 	const DoubleNesting = defineShape({
 		id    : Type.number(),
 		shapes: arrayOf(NestedShape),
-	})
+	});
+
+	const OptionalShape = defineShape({
+		id  : Type.number(),
+		name: Type.string(),
+		type: Type.string().optional(),
+	});
 
 	it ('defines a shape successfully', () => {
 		expect(UserShape instanceof Shape).toEqual(true);
@@ -162,6 +168,59 @@ describe('ShapeType', () => {
 		};
 		const result = { extraFields: [], invalidTypeFields: [ 'shapes' ], missingFields: [] };
 		expect (DoubleNesting.validate(doubleNester)).toEqual(result);
+	});
+
+	it ('compares a present optional field successfully', () => {
+		const testShape = {
+			id: 12,
+			name: 'Toby',
+			type: 'Dog',
+		};
+		expect (OptionalShape.compare(testShape)).toEqual(true);
+	});
+
+	it ('validates a present optional field successfully', () => {
+		const testShape = {
+			id: 12,
+			name: 'Toby',
+			type: 'Dog',
+		};
+		expect (OptionalShape.validate(testShape)).toEqual(validateTemplate);
+	});
+
+	it ('compares a missing optional field successfully', () => {
+		const testShape = {
+			id: 12,
+			name: 'Toby',
+		};
+		expect (OptionalShape.compare(testShape)).toEqual(true);
+	});
+
+	it ('validates a missing optional field successfully', () => {
+		const testShape = {
+			id: 12,
+			name: 'Toby',
+		};
+		expect (OptionalShape.validate(testShape)).toEqual(validateTemplate);
+	});
+
+	it ('compares an invalid optional field successfully', () => {
+		const testShape = {
+			id: 12,
+			name: 'Toby',
+			type: 1,
+		};
+		expect (OptionalShape.compare(testShape)).toEqual(false);
+	});
+
+	it ('validates an invalid optional field successfully', () => {
+		const testShape = {
+			id: 12,
+			name: 'Toby',
+			type: 1,
+		};
+		const result =  { extraFields: [], invalidTypeFields: [ 'type' ], missingFields: [] };
+		expect (OptionalShape.validate(testShape)).toEqual(result);
 	});
 
 });

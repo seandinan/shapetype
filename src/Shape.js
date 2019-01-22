@@ -4,6 +4,7 @@ import TypePrimitive from './TypePrimitive';
 class Shape {
 	constructor(shape){
 		this.shape = shape;
+		this.isOptional = false;
 	}
 
 	compare = (obj) => {
@@ -32,7 +33,11 @@ class Shape {
 		const isShapeOrType = (key) => is(key)(TypePrimitive) || is(key)(Shape) || is(key)(ArrayContainer);
 
 		// Check for keys defined by the Shape but missing from the object
-		results.missingFields = Object.keys(this.shape).filter(k => !keys.includes(k));
+		results.missingFields = Object.keys(this.shape).filter(k => {
+			const isOptional = this.shape[k].isOptional;
+			const isMissingFromObject = !keys.includes(k);
+			return !isOptional && isMissingFromObject;
+		});
 
 		// Validate each key in the object
 		keys.forEach(key => {
