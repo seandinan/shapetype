@@ -4,19 +4,36 @@ import TypePrimitive from './TypePrimitive';
 class Shape {
 	constructor(shape){
 		this.shape = shape;
-		this.isOptional = false;
 	}
 
 	compare = (obj) => {
-		return Object.keys(obj).reduce((isMatch, key) => {
-			if (!isMatch) return isMatch; // Already been shown to be false
-			if (!this.shape[key]) return false; // Key missing from reference shape
+		// All fields are of correct type
+			// Confirm that every obj[key] passes a .compare test with this.shape[key]
+		const objectKeys = Object.keys(obj);
+		const shapeKeys = Object.keys(this.shape);
+
+		const isNoExtraFields = objectKeys.reduce((isOK, key) => (
+			isOK ? shapeKeys.includes(key) : isOK
+		), true);
+
+		const isAllRequiredFieldsPresent = shapeKeys.reduce((isOK, key) => {
+			if (!isOK) return isOK;
+			// Confirm that every non-optional field in this.shape is in obj
+			return this.shape[key].isOptional || objectKeys.includes(key);
+		}, true);
+
+		if (!isNoExtraFields || !isAllRequiredFieldsPresent) return false;
+
+		const isAllFieldsCorrectType = objectKeys.reduce((isOK, key) => {
+			if (!isOK) return isOK;
 			const is = (instance) => this.shape[key] instanceof instance;
 			const isShapeOrType = is(TypePrimitive) || is(Shape) || is(ArrayContainer);
 			if (isShapeOrType || this.shape[key].constructor.name === 'Object'){
 				return this.shape[key].compare(obj[key]);
 			} else return obj[key] === this.shape[key];
-		}, true)
+		}, true);
+
+		return isAllFieldsCorrectType;
 	}
 
 	validate = (obj) => {

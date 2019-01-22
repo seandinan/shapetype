@@ -44,6 +44,8 @@ describe('ShapeType', () => {
 		type: Type.string().optional(),
 	});
 
+	const ExtendedOptionalShape = extendShape(OptionalShape, { animal: Type.string() });
+
 	it ('defines a shape successfully', () => {
 		expect(UserShape instanceof Shape).toEqual(true);
 	});
@@ -96,6 +98,7 @@ describe('ShapeType', () => {
 	});
 
 	it ('compares a non-matching shape unsuccessfully', () => {
+		console.log(UserShape.validate(enhancedUser));
 		expect (UserShape.compare(enhancedUser)).toEqual(false);
 	});
 
@@ -221,6 +224,41 @@ describe('ShapeType', () => {
 		};
 		const result =  { extraFields: [], invalidTypeFields: [ 'type' ], missingFields: [] };
 		expect (OptionalShape.validate(testShape)).toEqual(result);
+	});
+
+	it ('compares a missing optional field in an extended object successfully', () => {
+		const testShape = {
+			id: 12,
+			name: 'Toby',
+			animal: 'Dog',
+		};
+		expect (ExtendedOptionalShape.compare(testShape)).toEqual(true);
+	});
+
+	it ('compares a missing required field in an extended object unsuccessfully', () => {
+		const testShape = {
+			id: 12,
+			name: 'Toby',
+		};
+		expect (ExtendedOptionalShape.compare(testShape)).toEqual(false);
+	});
+
+	it ('validates a missing optional field in an extended object successfully', () => {
+		const testShape = {
+			id: 12,
+			name: 'Toby',
+			animal: 'Dog',
+		};
+		expect (ExtendedOptionalShape.validate(testShape)).toEqual(validateTemplate);
+	});
+
+	it ('validates a missing required field in an extended object unsuccessfully', () => {
+		const testShape = {
+			id: 12,
+			name: 'Toby',
+		};
+		const result = { extraFields: [], invalidTypeFields: [], missingFields: [ 'animal' ] };
+		expect (ExtendedOptionalShape.validate(testShape)).toEqual(result);
 	});
 
 });

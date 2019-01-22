@@ -23,6 +23,7 @@ var TypePrimitive = function TypePrimitive(_val, isType) {
   _classCallCheck(this, TypePrimitive);
 
   _defineProperty(this, "compare", function (val) {
+    if (_this.isOptional && !val) return true;
     return _this.typeChecks.reduce(function (result, check) {
       if (result) return result;
       return check(val);
@@ -33,6 +34,7 @@ var TypePrimitive = function TypePrimitive(_val, isType) {
     var results = {
       invalidTypeFields: []
     };
+    if (_this.isOptional && !val) return results;
     if (!_this.compare(val)) results.invalidTypeFields.push(val);
     return results;
   });
@@ -43,8 +45,14 @@ var TypePrimitive = function TypePrimitive(_val, isType) {
     return _this;
   });
 
+  _defineProperty(this, "optional", function () {
+    _this.isOptional = true;
+    return _this;
+  });
+
   this.value = _val;
   this.typeChecks = [isType];
+  this.isOptional = false;
 };
 
 var _default = TypePrimitive;

@@ -58,7 +58,9 @@ var Shape = function Shape(shape) {
 
 
     results.missingFields = Object.keys(_this.shape).filter(function (k) {
-      return !keys.includes(k);
+      var isOptional = _this.shape[k].isOptional;
+      var isMissingFromObject = !keys.includes(k);
+      return !isOptional && isMissingFromObject;
     }); // Validate each key in the object
 
     keys.forEach(function (key) {
@@ -79,6 +81,7 @@ var Shape = function Shape(shape) {
   });
 
   this.shape = shape;
+  this.isOptional = false;
 };
 
 var _default = Shape;
