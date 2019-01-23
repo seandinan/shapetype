@@ -13,12 +13,16 @@ class TypePrimitive {
 		}, false);
 	};
 
+	partialCompare = (val) => this.compare(val);
+
 	validate = (val) => {
 		let results = { invalidTypeFields: [] };
 		if (this.isOptional && !val) return results;
 		if (!this.compare(val)) results.invalidTypeFields.push(val);
 		return results;
 	};
+
+	partialValidate = (val) => this.validate(val);
 
 	or = (type) => {
 		if (!(type instanceof TypePrimitive)) throw 'method "or" requires type TypePrimitive';

@@ -6,71 +6,87 @@ class Shape {
 		this.shape = shape;
 	}
 
-	compare = (obj) => {
-		// All fields are of correct type
-			// Confirm that every obj[key] passes a .compare test with this.shape[key]
-		const objectKeys = Object.keys(obj);
-		const shapeKeys = Object.keys(this.shape);
+	compare = (obj) => compare(this.shape, obj);
 
-		const isNoExtraFields = objectKeys.reduce((isOK, key) => (
-			isOK ? shapeKeys.includes(key) : isOK
-		), true);
+	partialCompare = (obj) => compare(getPartialShape(this.shape, obj), obj);
 
-		const isAllRequiredFieldsPresent = shapeKeys.reduce((isOK, key) => {
-			if (!isOK) return isOK;
-			// Confirm that every non-optional field in this.shape is in obj
-			return this.shape[key].isOptional || objectKeys.includes(key);
-		}, true);
+	validate = (obj) => validate(this.shape, obj);
 
-		if (!isNoExtraFields || !isAllRequiredFieldsPresent) return false;
+	partialValidate = (obj) => validate(getPartialShape(this.shape, obj), obj);
 
-		const isAllFieldsCorrectType = objectKeys.reduce((isOK, key) => {
-			if (!isOK) return isOK;
-			const is = (instance) => this.shape[key] instanceof instance;
-			const isShapeOrType = is(TypePrimitive) || is(Shape) || is(ArrayContainer);
-			if (isShapeOrType || this.shape[key].constructor.name === 'Object'){
-				return this.shape[key].compare(obj[key]);
-			} else return obj[key] === this.shape[key];
-		}, true);
+}
 
-		return isAllFieldsCorrectType;
-	}
+function getPartialShape(shape, obj){
+	const objectKeys = Object.keys(obj);
+	const shapeKeys = Object.keys(shape);
+	let refShape = { ...shape }; // shallow clone
+	shapeKeys.forEach(key => {
+		if (!objectKeys.includes(key)) delete refShape[key];
+	});
+	return refShape;
+}
 
-	validate = (obj) => {
-		const keys = Object.keys(obj);
+function compare(refShape, obj){
+	const objectKeys = Object.keys(obj);
+	const shapeKeys = Object.keys(refShape);
 
-		let results = {
-			missingFields    : [],
-			extraFields      : [],
-			invalidTypeFields: [],
-		};
+	const isNoExtraFields = objectKeys.reduce((isOK, key) => (
+		isOK ? shapeKeys.includes(key) : isOK
+	), true);
 
-		// Determine if the value has shapetype methods
-		const is = (key) => (instance) => this.shape[key] instanceof instance;
-		const isShapeOrType = (key) => is(key)(TypePrimitive) || is(key)(Shape) || is(key)(ArrayContainer);
+	const isAllRequiredFieldsPresent = shapeKeys.reduce((isOK, key) => {
+		if (!isOK) return isOK;
+		// Confirm that every non-optional field in this.shape is in obj
+		return refShape[key].isOptional || objectKeys.includes(key);
+	}, true);
 
-		// Check for keys defined by the Shape but missing from the object
-		results.missingFields = Object.keys(this.shape).filter(k => {
-			const isOptional = this.shape[k].isOptional;
-			const isMissingFromObject = !keys.includes(k);
-			return !isOptional && isMissingFromObject;
-		});
+	if (!isNoExtraFields || !isAllRequiredFieldsPresent) return false;
 
-		// Validate each key in the object
-		keys.forEach(key => {
-			// key isn't defined in the Shape
-			if (!this.shape[key]){
-				results.extraFields.push(key);
-			} else if (isShapeOrType(key) || this.shape[key].constructor.name === 'Object'){
-				if (!this.shape[key].compare(obj[key])){
-					results.invalidTypeFields.push(key);
-				};
-			} else if (obj[key] !== this.shape[key]){
+	const isAllFieldsCorrectType = objectKeys.reduce((isOK, key) => {
+		if (!isOK) return isOK;
+		const is = (instance) => refShape[key] instanceof instance;
+		const isShapeOrType = is(TypePrimitive) || is(Shape) || is(ArrayContainer);
+		if (isShapeOrType || refShape[key].constructor.name === 'Object'){
+			return refShape[key].compare(obj[key]);
+		} else return obj[key] === refShape[key];
+	}, true);
+
+	return isAllFieldsCorrectType;
+}
+
+function validate(refShape, obj){
+	const keys = Object.keys(obj);
+	let results = {
+		missingFields    : [],
+		extraFields      : [],
+		invalidTypeFields: [],
+	};
+
+	// Determine if the value has shapetype methods
+	const is = (key) => (instance) => refShape[key] instanceof instance;
+	const isShapeOrType = (key) => is(key)(TypePrimitive) || is(key)(Shape) || is(key)(ArrayContainer);
+
+	// Check for keys defined by the Shape but missing from the object
+	results.missingFields = Object.keys(refShape).filter(k => {
+		const isOptional = refShape[k].isOptional;
+		const isMissingFromObject = !keys.includes(k);
+		return !isOptional && isMissingFromObject;
+	});
+
+	// Validate each key in the object
+	keys.forEach(key => {
+		// key isn't defined in the Shape
+		if (!refShape[key]){
+			results.extraFields.push(key);
+		} else if (isShapeOrType(key) || refShape[key].constructor.name === 'Object'){
+			if (!refShape[key].compare(obj[key])){
 				results.invalidTypeFields.push(key);
-			}
-		});
-		return results;
-	}
+			};
+		} else if (obj[key] !== refShape[key]){
+			results.invalidTypeFields.push(key);
+		}
+	});
+	return results;
 }
 
 export default Shape;

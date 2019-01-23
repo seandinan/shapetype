@@ -22,6 +22,13 @@ var ArrayContainer = function ArrayContainer(type) {
     }, true);
   });
 
+  _defineProperty(this, "partialCompare", function (val) {
+    if (!val.reduce) return false;
+    return val.reduce(function (isOK, b) {
+      return isOK ? _this.type.partialCompare(b) : isOK;
+    }, true);
+  });
+
   _defineProperty(this, "validate", function (val) {
     var results = [];
     if (!val.forEach) throw TypeError('ArrayContainer requires an array for comparison');
@@ -30,6 +37,27 @@ var ArrayContainer = function ArrayContainer(type) {
           missingFields = _this$type$validate.missingFields,
           extraFields = _this$type$validate.extraFields,
           invalidTypeFields = _this$type$validate.invalidTypeFields;
+
+      if (missingFields.length > 0 || extraFields.length > 0 || invalidTypeFields.length > 0) {
+        results.push({
+          index: i,
+          missingFields: missingFields,
+          extraFields: extraFields,
+          invalidTypeFields: invalidTypeFields
+        });
+      }
+    });
+    return results;
+  });
+
+  _defineProperty(this, "partialValidate", function (val) {
+    var results = [];
+    if (!val.forEach) throw TypeError('ArrayContainer requires an array for comparison');
+    val.forEach(function (entry, i) {
+      var _this$type$partialVal = _this.type.partialValidate(entry),
+          missingFields = _this$type$partialVal.missingFields,
+          extraFields = _this$type$partialVal.extraFields,
+          invalidTypeFields = _this$type$partialVal.invalidTypeFields;
 
       if (missingFields.length > 0 || extraFields.length > 0 || invalidTypeFields.length > 0) {
         results.push({

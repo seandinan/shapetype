@@ -35,7 +35,7 @@ Types allow you to define what type of data you expect a value to be.
         - `EmailType.validate('test@test.com') ~ { invalidTypeFields: [] }`
         - `EmailType.validate('test=test') ~ { invalidTypeFields: [ 'test=test' ] }` 
 - `.or()`: allows you to chain a list of Types together
-    - _Example:_ `const assignedTo = Type.number().or(Type.null())` 
+    - _Example:_ `const assignedTo = Type.number().or(Type.null())` sh
 
 --- 
 
@@ -73,6 +73,10 @@ const Event = defineShape({
     - _Example:_ 
         - `User.compare({ id: 2, name: 'Test', assignedTo: 12 }) ~ true`
         - `User.compare({ id: 2, name: 'Test', assignedTo: 'Joe' }) ~ false`
+- `.partialCompare(obj)` same as `.compare(obj)`, but only tests for the keys present in `obj`.
+    - _Example:_
+        - `User.partialCompare({ id: 2 }) ~ true`
+        - `User.partialCompare({ id: 'Toby' }) ~ false`         
 - `.validate(obj)` returns a validation object reflecting the test results of the individual values defined by the shape.
     - The validation object consists of three arrays:
         - `missingFields`: fields that are defined in the Shape but missing from the object
@@ -83,6 +87,10 @@ const Event = defineShape({
         - `User.validate({ id: 2, name: 'Test', assignedTo: 'Joe' }) ~ { missingFields: [], extraFields: [], invalidTypeFields: [ 'assignedTo' ] }`
         - `User.validate({ name: 'Test', assignedTo: 12 }) ~ { missingFields: [ 'id ], extraFields: [], invalidTypeFields: [] }`
        - `User.validate({ id: 2, name: 'Test', assignedTo: 12, isDog: true }) ~ { missingFields: [], extraFields: [ 'isDog' ], invalidTypeFields: [] }`
+- `.partialValidate(obj)` same as `.validate(obj)`, but only tests for the keys present in `obj`.
+    - _Example:_
+        - `User.partialValidate({ id: 2 }) ~ { missingFields: [], extraFields: [], invalidTypeFields: [] }`
+        - `User.partialCompare({ id: 'Toby' }) ~ { missingFields: [], extraFields: [], invalidTypeFields: [ 'id' ] }`       
 
 --- 
 

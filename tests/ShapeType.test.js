@@ -98,7 +98,6 @@ describe('ShapeType', () => {
 	});
 
 	it ('compares a non-matching shape unsuccessfully', () => {
-		console.log(UserShape.validate(enhancedUser));
 		expect (UserShape.compare(enhancedUser)).toEqual(false);
 	});
 
@@ -259,6 +258,27 @@ describe('ShapeType', () => {
 		};
 		const result = { extraFields: [], invalidTypeFields: [], missingFields: [ 'animal' ] };
 		expect (ExtendedOptionalShape.validate(testShape)).toEqual(result);
+	});
+
+	it ('compares a valid partial object successfully', () => {
+		const testShape = { id: 12 };
+		expect (UserShape.partialCompare(testShape)).toEqual(true);
+	});
+
+	it ('compares an invalid partial object successfully', () => {
+		const testShape = { badKey: 12 };
+		expect (UserShape.partialCompare(testShape)).toEqual(false);
+	});
+
+	it ('validates a valid partial object successfully', () => {
+		const testShape = { id: 12 };
+		expect (UserShape.partialValidate(testShape)).toEqual(validateTemplate);
+	});
+
+	it ('validates an invalid partial object successfully', () => {
+		const testShape = { badKey: 12 };
+		const result = { extraFields: [ 'badKey' ], invalidTypeFields: [], missingFields: [] };
+		expect (UserShape.partialValidate(testShape)).toEqual(result);
 	});
 
 });
