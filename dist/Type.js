@@ -29,17 +29,17 @@ var Type = {
   },
   object: function object() {
     return new _TypePrimitive.default(_constants.OBJECT, function (val) {
-      return val.constructor.name === 'Object';
+      return !!val && val.constructor.name === 'Object';
     });
   },
   array: function array() {
     return new _TypePrimitive.default(_constants.ARRAY, function (val) {
-      return val.constructor.name === 'Array';
+      return !!val && val.constructor.name === 'Array';
     });
   },
   datetime: function datetime() {
     return new _TypePrimitive.default(_constants.DATETIME, function (val) {
-      return val.constructor.name === 'Date';
+      return !!val && val.constructor.name === 'Date';
     });
   },
   null: function _null() {
