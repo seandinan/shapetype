@@ -16,9 +16,9 @@ const Type = {
 	bool      : () => new TypePrimitive(BOOL     , (val) => typeof val === 'boolean'),
 	number    : () => new TypePrimitive(NUMBER   , (val) => typeof val === 'number'),
 	string    : () => new TypePrimitive(STRING   , (val) => typeof val === 'string'),
-	object    : () => new TypePrimitive(OBJECT   , (val) => val.constructor.name === 'Object'),
-	array     : () => new TypePrimitive(ARRAY    , (val) => val.constructor.name === 'Array'),
-	datetime  : () => new TypePrimitive(DATETIME , (val) => val.constructor.name === 'Date'),
+	object    : () => new TypePrimitive(OBJECT   , (val) => val && val.constructor.name === 'Object'),
+	array     : () => new TypePrimitive(ARRAY    , (val) => val && val.constructor.name === 'Array'),
+	datetime  : () => new TypePrimitive(DATETIME , (val) => val && val.constructor.name === 'Date'),
 	null      : () => new TypePrimitive(NULL     , (val) => val === null),
 	undefined : () => new TypePrimitive(UNDEFINED, (val) => val === undefined),
 	value     : function(){
