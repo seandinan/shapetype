@@ -5,6 +5,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _ArrayContainer = _interopRequireDefault(require("./ArrayContainer"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
@@ -48,8 +52,16 @@ var TypePrimitive = function TypePrimitive(_val, isType) {
   });
 
   _defineProperty(this, "or", function (type) {
-    if (!(type instanceof TypePrimitive)) throw 'method "or" requires type TypePrimitive';
-    _this.typeChecks = _toConsumableArray(_this.typeChecks).concat(_toConsumableArray(type.typeChecks));
+    if (!(type instanceof TypePrimitive) && !(type instanceof _ArrayContainer.default)) {
+      throw 'Unmethod "or" requires type TypePrimitive or type ArrayContainer';
+    }
+
+    if (type instanceof TypePrimitive) {
+      _this.typeChecks = _toConsumableArray(_this.typeChecks).concat(_toConsumableArray(type.typeChecks));
+    } else if (type instanceof _ArrayContainer.default) {
+      _this.typeChecks = _toConsumableArray(_this.typeChecks).concat([type.compare]);
+    }
+
     return _this;
   });
 

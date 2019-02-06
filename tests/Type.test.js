@@ -1,14 +1,33 @@
 import Type from '../src/Type';
+import { arrayOf } from './../src/ShapeType';
 
 describe('Type', () => {
 
-	it ('is able to chain "or" values', () => {
-		const type = Type.number().or(Type.string()).or(Type.null());
-		const compareNumber = type.compare(4);
-		const compareString = type.compare('dog');
-		const compareNull   = type.compare(null);
-		expect(compareNumber && compareString && compareNull).toEqual(true);
-	});
+	describe('Type.or()', () => {
+		const createdAtType = Type.string()
+			.or(arrayOf(Type.string()))
+			.or(arrayOf(arrayOf(Type.string())))
+
+		it ('chains "or" values', () => {
+			const type = Type.number().or(Type.string()).or(Type.null());
+			const compareNumber = type.compare(4);
+			const compareString = type.compare('dog');
+			const compareNull   = type.compare(null);
+			expect(compareNumber && compareString && compareNull).toEqual(true);
+		});
+
+		it ('compares a value at the start of an "or" chain', () => {
+			expect(createdAtType.compare('testval')).toEqual(true);
+		});
+
+		it ('compares an arrayOf in an "or" chain', () => {
+			expect(createdAtType.compare([ 'test1', 'test2' ])).toEqual(true);
+		});
+
+		it ('compares a nested arrayOf in an "or" chain', () => {
+			expect(createdAtType.compare([ ['test1'], ['test2'] ])).toEqual(true);
+		});
+	})
 
 	describe('bool', () => {
 		const bool = Type.bool();

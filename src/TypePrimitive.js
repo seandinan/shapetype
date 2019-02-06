@@ -1,3 +1,5 @@
+import ArrayContainer from './ArrayContainer';
+
 class TypePrimitive {
 	constructor(val, isType){
 		this.value = val;
@@ -25,8 +27,15 @@ class TypePrimitive {
 	partialValidate = (val) => this.validate(val);
 
 	or = (type) => {
-		if (!(type instanceof TypePrimitive)) throw 'method "or" requires type TypePrimitive';
-		this.typeChecks = [ ...this.typeChecks, ...type.typeChecks ];
+		if (!(type instanceof TypePrimitive) && !(type instanceof ArrayContainer)){
+			throw 'Unmethod "or" requires type TypePrimitive or type ArrayContainer';
+		}
+		if (type instanceof TypePrimitive){
+			this.typeChecks = [ ...this.typeChecks, ...type.typeChecks ];
+		} else if (type instanceof ArrayContainer){
+			this.typeChecks = [ ...this.typeChecks, type.compare ];
+		}
+
 		return this;
 	};
 

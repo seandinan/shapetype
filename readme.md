@@ -12,6 +12,7 @@ Types allow you to define what type of data you expect a value to be.
 - `Type.bool()` for a boolean value     
 - `Type.number()` for a number
 - `Type.string()` for a string
+- `Type.value(val1[, val2, val3])` for an exact match of one or more values.
 - `Type.datetime()` for a Date object
 - `Type.null()` for a null value
 - `Type.undefined()` for an undefined value
