@@ -4,5 +4,6 @@ module.exports = {
   Type       : ShapeType.Type,
   defineShape: ShapeType.defineShape,
   extendShape: ShapeType.extendShape,
-  arrayOf    : ShapeType.arrayOf
+  arrayOf    : ShapeType.arrayOf,
+  optional   : ShapeType.optional,
 };
