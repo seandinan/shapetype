@@ -26,7 +26,6 @@ Types allow you to define what type of data you expect a value to be.
     - _Example:_ `const EmailType = Type.custom(val => isEmail(val), 'EMAIL');` 
 
 #### Type Methods
-- `.optional()`: Indicates that a given field isn't required in a shape definition. Tests will still pass if the value is omitted. 
 - `.compare(val)`: returns `true`/`false` whether `val` matches the Type.
     - _Example:_ 
         - `EmailType.compare('test@test.com') ~ true`
@@ -47,7 +46,7 @@ When `validate` is called on a value defined by `arrayOf()`, an empty array will
 
 ---
 
-### `defineShape`
+### `defineShape({})`
 Returns a `Shape` when provided with an object of key/`Type` pairs.
 
 ```ecmascript 6
@@ -67,6 +66,18 @@ const Event = defineShape({
   guests: arrayOf(User),
 })
 ```
+
+### `optional()`
+Wraps a Type, Shape, or ArrayContainer to indicate that a given field isn't required in a shape definition. Tests will still pass if the value is omitted.
+
+```ecmascript 6
+const Event = defineShape({
+  id: Type.number(),
+  name: Type.string(),
+  createdBy: optional(User),
+  scheduledAt: optional(Type.datetime()),
+  guests: arrayOf(User),
+``` 
 
 #### Shape Methods
 
