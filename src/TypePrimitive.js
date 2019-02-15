@@ -1,4 +1,5 @@
 import ArrayContainer from './ArrayContainer';
+import Shape from './Shape';
 
 class TypePrimitive {
 	constructor(val, isType){
@@ -27,14 +28,12 @@ class TypePrimitive {
 	partialValidate = (val) => this.validate(val);
 
 	or = (type) => {
-		if (!(type instanceof TypePrimitive) && !(type instanceof ArrayContainer)){
-			throw 'Unmethod "or" requires type TypePrimitive or type ArrayContainer';
-		}
-		if (type instanceof TypePrimitive){
+		const isType = (refType) => type instanceof refType;
+		if (isType(TypePrimitive)){
 			this.typeChecks = [ ...this.typeChecks, ...type.typeChecks ];
-		} else if (type instanceof ArrayContainer){
+		} else if (isType(ArrayContainer) || isType(Shape)){
 			this.typeChecks = [ ...this.typeChecks, type.compare ];
-		}
+		} else throw 'Unmethod "or" requires type TypePrimitive, ArrayContainer, or Shape';
 
 		return this;
 	};

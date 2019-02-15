@@ -1,12 +1,17 @@
 import Type from '../src/Type';
-import { arrayOf } from './../src/ShapeType';
+import { arrayOf, defineShape } from './../src/ShapeType';
 
 describe('Type', () => {
 
 	describe('Type.or()', () => {
 		const createdAtType = Type.string()
 			.or(arrayOf(Type.string()))
-			.or(arrayOf(arrayOf(Type.string())))
+			.or(arrayOf(arrayOf(Type.string())));
+
+		const createdByType = Type.null().or(defineShape({
+			id  : Type.number(),
+			name: Type.string(),
+		}));
 
 		it ('chains "or" values', () => {
 			const type = Type.number().or(Type.string()).or(Type.null());
@@ -26,6 +31,22 @@ describe('Type', () => {
 
 		it ('compares a nested arrayOf in an "or" chain', () => {
 			expect(createdAtType.compare([ ['test1'], ['test2'] ])).toEqual(true);
+		});
+
+		it ('successfully compares a matching value in an "or" chain', () => {
+			expect(createdByType.compare(null)).toEqual(true);
+		});
+
+		it ('successfully compares a matching Shape in an "or" chain', () => {
+			expect(createdByType.compare({ id: 2, name: 'Toby' })).toEqual(true);
+		});
+
+		it ('successfully rejects a non-matching value in an "or" chain', () => {
+			expect(createdByType.compare('Toby')).toEqual(false);
+		});
+
+		it ('successfully rejects a non-matching Shape in an "or" chain', () => {
+			expect(createdByType.compare({ id: 'dog', name: 12 })).toEqual(false);
 		});
 	})
 

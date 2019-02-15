@@ -7,6 +7,8 @@ exports.default = void 0;
 
 var _ArrayContainer = _interopRequireDefault(require("./ArrayContainer"));
 
+var _Shape = _interopRequireDefault(require("./Shape"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
@@ -21,7 +23,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-var TypePrimitive = function TypePrimitive(_val, isType) {
+var TypePrimitive = function TypePrimitive(_val, _isType) {
   var _this = this;
 
   _classCallCheck(this, TypePrimitive);
@@ -52,15 +54,15 @@ var TypePrimitive = function TypePrimitive(_val, isType) {
   });
 
   _defineProperty(this, "or", function (type) {
-    if (!(type instanceof TypePrimitive) && !(type instanceof _ArrayContainer.default)) {
-      throw 'Unmethod "or" requires type TypePrimitive or type ArrayContainer';
-    }
+    var isType = function isType(refType) {
+      return type instanceof refType;
+    };
 
-    if (type instanceof TypePrimitive) {
+    if (isType(TypePrimitive)) {
       _this.typeChecks = _toConsumableArray(_this.typeChecks).concat(_toConsumableArray(type.typeChecks));
-    } else if (type instanceof _ArrayContainer.default) {
+    } else if (isType(_ArrayContainer.default) || isType(_Shape.default)) {
       _this.typeChecks = _toConsumableArray(_this.typeChecks).concat([type.compare]);
-    }
+    } else throw 'Unmethod "or" requires type TypePrimitive, ArrayContainer, or Shape';
 
     return _this;
   });
@@ -71,7 +73,7 @@ var TypePrimitive = function TypePrimitive(_val, isType) {
   });
 
   this.value = _val;
-  this.typeChecks = [isType];
+  this.typeChecks = [_isType];
   this.isOptional = false;
 };
 
