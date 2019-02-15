@@ -35,7 +35,7 @@ Types allow you to define what type of data you expect a value to be.
         - `EmailType.validate('test@test.com') ~ { invalidTypeFields: [] }`
         - `EmailType.validate('test=test') ~ { invalidTypeFields: [ 'test=test' ] }` 
 - `.or()`: allows you to chain a list of Types together
-    - _Example:_ `const assignedTo = Type.number().or(Type.null())` sh
+    - _Example:_ `const assignedTo = Type.number().or(Type.null())` 
 
 --- 
 
@@ -43,6 +43,20 @@ Types allow you to define what type of data you expect a value to be.
 Indicates that there is an array of the provided value.
 
 When `validate` is called on a value defined by `arrayOf()`, an empty array will be returned if all values pass their tests. An array of validation objects with an additional `index` key will be returned if any of the array's values do not pass their test. 
+
+---
+
+### `optional()`
+Wraps a Type, Shape, or ArrayContainer to indicate that a given field isn't required in a shape definition. Tests will still pass if the value is omitted.
+
+```ecmascript 6
+const Event = defineShape({
+  id: Type.number(),
+  name: Type.string(),
+  createdBy: optional(User),
+  scheduledAt: optional(Type.datetime()),
+  guests: arrayOf(User),
+``` 
 
 ---
 
@@ -66,18 +80,6 @@ const Event = defineShape({
   guests: arrayOf(User),
 })
 ```
-
-### `optional()`
-Wraps a Type, Shape, or ArrayContainer to indicate that a given field isn't required in a shape definition. Tests will still pass if the value is omitted.
-
-```ecmascript 6
-const Event = defineShape({
-  id: Type.number(),
-  name: Type.string(),
-  createdBy: optional(User),
-  scheduledAt: optional(Type.datetime()),
-  guests: arrayOf(User),
-``` 
 
 #### Shape Methods
 
