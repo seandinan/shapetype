@@ -1,6 +1,7 @@
 class ArrayContainer {
 	constructor(type){
 		this.type = type;
+		this.isOptional = false;
 	}
 
 	compare = (val) => {
@@ -28,7 +29,7 @@ class ArrayContainer {
 			}
 		});
 		return results;
-	}
+	};
 
 	partialValidate = (val) => {
 		let results = [];
@@ -44,7 +45,13 @@ class ArrayContainer {
 			}
 		});
 		return results;
-	}
+	};
+
+	optional = () => {
+		this.isOptional = true;
+		return this;
+	};
+
 }
 
 export default ArrayContainer;

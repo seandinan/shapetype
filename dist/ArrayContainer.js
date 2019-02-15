@@ -71,7 +71,13 @@ var ArrayContainer = function ArrayContainer(type) {
     return results;
   });
 
+  _defineProperty(this, "optional", function () {
+    _this.isOptional = true;
+    return _this;
+  });
+
   this.type = type;
+  this.isOptional = false;
 };
 
 var _default = ArrayContainer;

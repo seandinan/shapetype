@@ -1,4 +1,4 @@
-import { Type, defineShape, extendShape, arrayOf } from './../src/ShapeType';
+import { Type, defineShape, extendShape, arrayOf, optional } from './../src/ShapeType';
 import Shape from './../src/Shape';
 
 describe('ShapeType', () => {
@@ -41,10 +41,14 @@ describe('ShapeType', () => {
 	const OptionalShape = defineShape({
 		id  : Type.number(),
 		name: Type.string(),
-		type: Type.string().optional(),
+		type: optional(Type.string()),
 	});
 
 	const ExtendedOptionalShape = extendShape(OptionalShape, { animal: Type.string() });
+
+	const OptionalNestedShape = extendShape(OptionalShape, {
+		user: optional(UserShape),
+	});
 
 	it ('defines a shape successfully', () => {
 		expect(UserShape instanceof Shape).toEqual(true);

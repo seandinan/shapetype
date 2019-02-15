@@ -38,7 +38,13 @@ var Shape = function Shape(shape) {
     return validate(getPartialShape(_this.shape, obj), obj);
   });
 
+  _defineProperty(this, "optional", function () {
+    _this.isOptional = true;
+    return _this;
+  });
+
   this.shape = shape;
+  this.isOptional = false;
 };
 
 function getPartialShape(shape, obj) {

@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.defineShape = defineShape;
 exports.extendShape = extendShape;
 exports.arrayOf = arrayOf;
+exports.optional = optional;
 Object.defineProperty(exports, "Type", {
   enumerable: true,
   get: function get() {
@@ -18,6 +19,8 @@ var _ArrayContainer = _interopRequireDefault(require("./ArrayContainer"));
 var _Shape = _interopRequireDefault(require("./Shape"));
 
 var _Type = _interopRequireDefault(require("./Type"));
+
+var _TypePrimitive = _interopRequireDefault(require("./TypePrimitive"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -35,4 +38,12 @@ function extendShape(shape, data) {
 
 function arrayOf(val) {
   return new _ArrayContainer.default(val);
+}
+
+function optional(shapeOrTypeOrArrayContainer) {
+  var is = function is(primitive) {
+    return shapeOrTypeOrArrayContainer instanceof primitive;
+  };
+
+  if (is(_TypePrimitive.default) || is(_ArrayContainer.default)) return shapeOrTypeOrArrayContainer.optional();else if (is(_Shape.default)) return extendShape(shapeOrTypeOrArrayContainer).optional();else throw Error('optional() requires a Shape, Type, or ArrayContainer');
 }

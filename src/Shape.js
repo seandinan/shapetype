@@ -4,6 +4,7 @@ import TypePrimitive from './TypePrimitive';
 class Shape {
 	constructor(shape){
 		this.shape = shape;
+		this.isOptional = false;
 	}
 
 	compare = (obj) => compare(this.shape, obj);
@@ -13,6 +14,11 @@ class Shape {
 	validate = (obj) => validate(this.shape, obj);
 
 	partialValidate = (obj) => validate(getPartialShape(this.shape, obj), obj);
+
+	optional = () => {
+		this.isOptional = true;
+		return this;
+	};
 
 }
 

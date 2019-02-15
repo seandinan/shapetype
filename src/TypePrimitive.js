@@ -2,6 +2,7 @@ import ArrayContainer from './ArrayContainer';
 import Shape from './Shape';
 
 class TypePrimitive {
+
 	constructor(val, isType){
 		this.value = val;
 		this.typeChecks = [ isType ];
